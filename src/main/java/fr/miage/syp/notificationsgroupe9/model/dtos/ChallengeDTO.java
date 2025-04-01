@@ -1,4 +1,4 @@
-package fr.miage.syp.notificationsgroupe9.model.entity;
+package fr.miage.syp.notificationsgroupe9.model.dtos;
 
 import java.io.Serializable;
 

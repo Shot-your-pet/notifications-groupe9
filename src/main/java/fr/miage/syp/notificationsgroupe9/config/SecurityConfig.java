@@ -26,6 +26,7 @@ public class SecurityConfig {
         http
                 .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/notifications/subscribe").authenticated()
                         .requestMatchers("/notifications/**").permitAll()
                         .anyRequest().denyAll()
                 )

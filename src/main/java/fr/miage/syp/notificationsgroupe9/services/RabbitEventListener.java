@@ -1,7 +1,7 @@
 package fr.miage.syp.notificationsgroupe9.services;
 
-import fr.miage.syp.notificationsgroupe9.model.entity.ChallengeDuJourDTO;
-import fr.miage.syp.notificationsgroupe9.model.entity.ProfileDTO;
+import fr.miage.syp.notificationsgroupe9.model.dtos.ChallengeDuJourDTO;
+import fr.miage.syp.notificationsgroupe9.model.dtos.ProfileDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -23,7 +23,12 @@ public class RabbitEventListener {
     public void receiveNewChallenge(ChallengeDuJourDTO challenge) {
         LOG.info("Nouveau challenge reçu : {}", challenge);
         List<ProfileDTO> utilisateurs = facadeNotifications.getProfilesUtilisateurs();
-        facadeNotifications.envoyerNotificationMail(utilisateurs, challenge);
+        try {
+            facadeNotifications.envoyerNotificationMail(utilisateurs, challenge);
+            facadeNotifications.envoyerNotificationsPush(utilisateurs, challenge);
+        } catch (Exception e) {
+            LOG.error("Erreur lors de l'envoi des notifications push", e);
+        }
     }
 
 

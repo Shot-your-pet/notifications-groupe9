@@ -1,7 +1,7 @@
 package fr.miage.syp.notificationsgroupe9.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.miage.syp.notificationsgroupe9.model.entity.ProfileDTO;
+import fr.miage.syp.notificationsgroupe9.model.dtos.ProfileDTO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
