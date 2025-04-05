@@ -113,15 +113,19 @@ public class FacadeNotificationsImpl implements FacadeNotifications {
     public void envoyerNotificationsPush(List<ProfileDTO> utilisateurs, ChallengeDuJourDTO challenge) throws GeneralSecurityException, JoseException, IOException, ExecutionException, InterruptedException {
         List<SubscriptionNotification> subscriptionNotifications = this.subscriptionNotificationRepository.findAll();
         for (SubscriptionNotification subscription : subscriptionNotifications) {
-
-            Notification notification = new Notification(
-                    subscription.getEndpoint(),
-                    subscription.getP256dhKey(),
-                    subscription.getAuthKey(),
-                    this.objectMapper.writeValueAsString(challenge)
-            );
-            HttpResponse connexion = this.pushService.send(notification);
-            LOG.debug("Notification envoyée à {} : {}", subscription.getEndpoint(), connexion.getStatusLine());
+            try {
+                Notification notification = new Notification(
+                        subscription.getEndpoint(),
+                        subscription.getP256dhKey(),
+                        subscription.getAuthKey(),
+                        this.objectMapper.writeValueAsString(challenge)
+                );
+                HttpResponse connexion = this.pushService.send(notification);
+                LOG.debug("Notification envoyée à {} : {}", subscription.getEndpoint(), connexion.getStatusLine());
+            } catch (Exception e) {
+                LOG.error("Erreur lors de l'envoi de la notification push à {} : {}", subscription.getEndpoint(), e.getMessage());
+                // Supprimer la souscription si l'envoi échoue
+            }
         }
         LOG.info("Notifications envoyées à {} utilisateurs", subscriptionNotifications.size());
     }
